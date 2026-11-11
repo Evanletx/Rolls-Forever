@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rolls Forever</title>
+<style>
+  :root {
+    --bg: #14110e;
+    --panel: #1d1915;
+    --line: #4a3b22;
+    --gold: #ffd100;
+    --gold-soft: #c8a54a;
+    --text: #e8e2d6;
+    --muted: #9c9283;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 17px;
+    line-height: 1.65;
+  }
+  main {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 56px 16px 72px;
+  }
+  header { text-align: center; margin-bottom: 36px; }
+  h1 {
+    margin: 0;
+    font-size: 54px;
+    font-weight: normal;
+    letter-spacing: 3px;
+    color: var(--gold);
+    text-shadow: 0 2px 0 #000, 0 0 24px rgba(255, 209, 0, 0.25);
+  }
+  .tagline {
+    margin: 10px 0 0;
+    color: var(--gold-soft);
+    font-style: italic;
+    font-size: 19px;
+  }
+  .version { margin-top: 18px; text-align: center; color: var(--muted); font-size: 13px; letter-spacing: 1px; }
+  nav { margin-top: 18px; font-size: 14.5px; letter-spacing: 1px; }
+  nav a { display: inline-block; margin: 2px 8px; border-bottom: 0; color: var(--muted); }
+  nav a:hover { color: var(--gold); }
+  h2 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    margin: 56px 0 22px;
+    font-size: 25px;
+    font-weight: normal;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    text-align: center;
+    color: var(--gold);
+    text-shadow: 0 1px 0 #000;
+    scroll-margin-top: 24px;
+  }
+  h2::before, h2::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    max-width: 180px;
+  }
+  h2::before { background: linear-gradient(to right, transparent, var(--gold-soft)); }
+  h2::after { background: linear-gradient(to left, transparent, var(--gold-soft)); }
+  h3 {
+    margin: 0 0 8px;
+    font-size: 15px;
+    font-weight: normal;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold-soft);
+  }
+  p { margin: 0 0 16px; }
+  .lead { font-size: 19px; text-align: center; font-style: italic; }
+  code {
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 0.88em;
+    color: var(--gold);
+    background: #000;
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    padding: 1px 6px;
+    white-space: nowrap;
+  }
+  pre {
+    margin: 10px 0 0;
+    padding: 10px 14px;
+    background: #000;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    overflow-x: auto;
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 14px;
+    color: var(--gold);
+  }
+  .features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 16px;
+    margin-top: 22px;
+  }
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 18px 20px;
+  }
+  .card p { margin: 0; font-size: 15.5px; line-height: 1.5; }
+  ol.steps { margin: 0; padding-left: 22px; }
+  ol.steps li { margin-bottom: 12px; }
+  ol.steps li::marker { color: var(--gold-soft); }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    overflow: hidden;
+    font-size: 15.5px;
+  }
+  td { padding: 11px 16px; border-top: 1px solid #2c251b; vertical-align: top; }
+  tr:first-child td { border-top: 0; }
+  td:first-child { width: 38%; }
+  .table-wrap { overflow-x: auto; }
+  .note {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--gold-soft);
+    border-radius: 6px;
+    padding: 14px 18px;
+    font-size: 15.5px;
+  }
+  .note strong { color: var(--gold); font-weight: normal; letter-spacing: 1px; text-transform: uppercase; font-size: 13px; display: block; margin-bottom: 4px; }
+  .credits { text-align: center; }
+  .credits strong { color: var(--gold); font-weight: normal; }
+  a { color: var(--gold); text-decoration: none; border-bottom: 1px solid var(--line); }
+  a:hover { border-bottom-color: var(--gold); }
+  figure { margin: 0; }
+  figure img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+  }
+  figcaption { margin-top: 12px; text-align: center; color: var(--muted); font-size: 14.5px; font-style: italic; }
+  @media (max-width: 520px) {
+    h1 { font-size: 38px; }
+    h2 { font-size: 20px; gap: 12px; }
+    td:first-child { width: 46%; }
+  }
+</style>
+</head>
+<body>
+<main>
+
+  <header>
+    <h1>Rolls Forever</h1>
+    <p class="tagline">Find out if you really never win anything.</p>
+    <nav>
+      <a href="#introduction">Introduction</a>
+      <a href="#how-it-works">How it works</a>
+      <a href="#install">Install</a>
+      <a href="#commands">Commands</a>
+      <a href="#notes">Notes</a>
+      <a href="#credits">Credits</a>
+    </nav>
+  </header>
+
+  <figure>
+    <img src="https://i.imgur.com/zHEHg4x.png" alt="The Rolls Forever window on the Greed tab, showing roll stats on the left and the roll history on the right" width="1464" height="896">
+    <figcaption>The Greed tab, shown with the sample character.</figcaption>
+  </figure>
+
+  <h2 id="introduction">Introduction</h2>
+  <p class="lead">I don't know about you, but I haven't won anything since 2006.<br>Rolls Forever lets you find out if that's actually true.</p>
+  <p>This mod automagically keeps a record of every Need and Greed roll you make in WoW Forever, on every character.</p>
+
+  <h2 id="how-it-works">How it works</h2>
+  <p>Each time an item comes up for a roll, Rolls Forever notes the item, whether you picked Need, Greed or Pass, the number you rolled, who won and what they rolled.</p>
+  <p>View rolls per character, and you can switch between or look at all of them together.</p>
+  <p>Open it with <code>/rolls</code>, the minimap button, or the addon menu on the minimap.</p>
+
+  <div class="features">
+    <div class="card"><h3>Tabs</h3><p>All Rolls, Need and Greed.</p></div>
+    <div class="card"><h3>Character dropdown</h3><p>Each character on its own, or an All Characters view.</p></div>
+    <div class="card"><h3>Calendar filter</h3><p>Pick a date and look back 30 days, 60 days, 3, 6 or 9 months, a year, or all time.</p></div>
+    <div class="card"><h3>Search box</h3><p>Find an item, a winner or a location by name.</p></div>
+    <div class="card"><h3>Stats panel</h3><p>Median, highest and lowest roll, natural 100s and 1s, luck, win and dry streaks, closest loss, and where you roll the most.</p></div>
+  </div>
+
+  <h2 id="install">Install</h2>
+  <ol class="steps">
+    <li>Download or clone the repository.</li>
+    <li>Put the folder in your WoW Forever addons folder, named <code>RollsForever</code>:
+      <pre>World of Warcraft/_forever_/Interface/AddOns/RollsForever</pre></li>
+    <li>Restart the game (or <code>/reload</code>) and make sure Rolls Forever is ticked in the AddOns list.</li>
+  </ol>
+
+  <h2 id="commands">Commands</h2>
+  <div class="table-wrap">
+    <table>
+      <tr><td><code>/rolls</code></td><td>Opens or closes the window. <code>/rf</code> and <code>/rollsforever</code> work too.</td></tr>
+      <tr><td><code>/rolls scale 0.9</code></td><td>Makes the window smaller or bigger, anywhere from 0.6 to 1.5.</td></tr>
+      <tr><td><code>/rolls minimap</code></td><td>Shows or hides the minimap button.</td></tr>
+      <tr><td><code>/rolls reset</code></td><td>Wipes the saved rolls for the character you're on. Asks you to type <code>/rolls reset confirm</code> first.</td></tr>
+      <tr><td><code>/rolls about</code></td><td>Version, credits and where to get help.</td></tr>
+    </table>
+  </div>
+
+  <h2 id="notes">Notes</h2>
+  <div class="note"><strong>Coming later</strong>Cloud sync through apphub.au is planned as an opt-in extra. Not currently implemented.</div>
+
+  <h2 id="credits">Credits and support</h2>
+  <p class="credits">Made by <strong>Evanlet</strong></p>
+  <p class="credits">Support: <a href="mailto:support@apphub.au">support@apphub.au</a><br>
+  Website: <a href="https://ageofauroria.apphub.au">ageofauroria.apphub.au</a></p>
+  <p class="version">Version 1.0.2</p>
+
+</main>
+</body>
+</html>
