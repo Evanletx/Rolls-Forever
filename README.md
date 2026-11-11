@@ -9,6 +9,7 @@
 [Install](#install) •
 [Commands](#commands) •
 [Notes](#notes) •
+[License](#license) •
 [Credits and support](#credits-and-support)
 
 <br>
@@ -75,6 +76,20 @@ Open it with `/rolls`, the minimap button, or the addon menu on the minimap.
 
 > [!NOTE]
 > Cloud sync through apphub.au is planned as an opt-in extra. Not currently implemented.
+
+---
+
+## License
+
+[![CC BY-NC-ND 4.0](https://licensebuttons.net/l/by-nc-nd/4.0/88x31.png)](https://creativecommons.org/licenses/by-nc-nd/4.0/)
+
+Copyright © 2026 Evanlet. Licensed under [Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International](https://creativecommons.org/licenses/by-nc-nd/4.0/) (CC BY-NC-ND 4.0).
+
+- ✅ **Share it:** unmodified copies only, crediting **Evanlet** with a link back to this repository.
+- ❌ **Modify it:** no sharing of changed versions or derivative works without written permission.
+- ❌ **Sell it:** no commercial use.
+
+To ask for permission, email [support@apphub.au](mailto:support@apphub.au). The full terms are in [LICENSE](LICENSE).
 
 ---
 
