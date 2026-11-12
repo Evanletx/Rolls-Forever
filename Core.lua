@@ -228,6 +228,12 @@ function ns.CreateSampleData()
 		if ty == "pass" then
 			rec.won = false
 			rec.wn, rec.wc, rec.wr, rec.wt = other[1], other[2], math.random(100), "greed"
+		elseif ty == "greed" and math.random(100) <= 15 then
+			-- Someone picked Need, so Greed never rolled and had no chance.
+			local needers = math.random(1, 2)
+			rec.won, rec.exp = false, 0
+			rec.cn, rec.cg, rec.cp = needers, 5 - needers, 0
+			rec.wn, rec.wc, rec.wr, rec.wt = other[1], other[2], math.random(100), "need"
 		else
 			rec.roll = math.random(100)
 			local best = 0

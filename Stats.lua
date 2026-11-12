@@ -35,6 +35,17 @@ local function IsSelection(rollType)
 end
 Stats.IsSelection = IsSelection
 
+-- A Greed-tier pick (Greed, Disenchant, Transmog) can't win once anyone picks
+-- Need, so that roll has no outcome: it's neither a win nor a loss.
+local function BlockedByNeed(rec)
+	local rollType = rec.type
+	if rec.won == true or rollType == "need" or not IsSelection(rollType) then
+		return false
+	end
+	return rec.wt == "need" or (type(rec.cn) == "number" and rec.cn > 0)
+end
+Stats.BlockedByNeed = BlockedByNeed
+
 function Stats.Matches(rec, filter)
 	if filter == "need" then
 		return rec.type == "need"
@@ -73,7 +84,7 @@ function Stats.Compute(records)
 		total = #records,
 		need = 0, greed = 0, pass = 0, other = 0, unknown = 0,
 		selections = 0,
-		wins = 0, losses = 0,
+		wins = 0, losses = 0, blocked = 0,
 		numbered = 0,
 		sum = 0,
 		bands = {}, bandPct = {},
@@ -97,6 +108,11 @@ function Stats.Compute(records)
 		local r = records[i]
 		local rollType = r.type
 		local selected = IsSelection(rollType)
+		local won = r.won
+		if BlockedByNeed(r) then
+			won = nil
+			s.blocked = s.blocked + 1
+		end
 
 		if rollType == "need" then
 			s.need = s.need + 1
@@ -125,14 +141,14 @@ function Stats.Compute(records)
 
 		if selected then
 			s.selections = s.selections + 1
-			if r.won == true then
+			if won == true then
 				s.wins = s.wins + 1
 				winRun = winRun + 1
 				dryRun = 0
 				if winRun > s.bestWinStreak then
 					s.bestWinStreak = winRun
 				end
-			elseif r.won == false then
+			elseif won == false then
 				s.losses = s.losses + 1
 				dryRun = dryRun + 1
 				winRun = 0
@@ -140,10 +156,10 @@ function Stats.Compute(records)
 					s.longestDryStreak = dryRun
 				end
 			end
-			if type(r.exp) == "number" and r.won ~= nil then
+			if type(r.exp) == "number" and won ~= nil then
 				s.expectedWins = s.expectedWins + r.exp
 				s.expectedSample = s.expectedSample + 1
-				if r.won then
+				if won then
 					s.expectedActual = s.expectedActual + 1
 				end
 			end
@@ -172,12 +188,12 @@ function Stats.Compute(records)
 			if not s.min or roll < s.min then
 				s.min = roll
 			end
-			if r.won == true then
+			if won == true then
 				winSum, winCount = winSum + roll, winCount + 1
 				if not s.lowestWin or roll < s.lowestWin then
 					s.lowestWin = roll
 				end
-			elseif r.won == false then
+			elseif won == false then
 				lossSum, lossCount = lossSum + roll, lossCount + 1
 				if not s.highestLoss or roll > s.highestLoss then
 					s.highestLoss = roll

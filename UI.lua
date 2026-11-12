@@ -343,7 +343,17 @@ function UI:BuildStatsPanel(panel)
 	w.halves = MakeSplitBar(panel, -234, "Below 50", "50 and above", BLUE, GOLD)
 	w.outcome = MakeSplitBar(panel, -272, "Won loot", "Pure salt", GREEN, RED)
 
-	MakeHeader(panel, "Details", -314)
+	local details = MakeHeader(panel, "Details", -314)
+	local info = CreateFrame("Frame", nil, panel)
+	info:SetSize(16, 16)
+	info:SetPoint("LEFT", details, "RIGHT", 3, 0)
+	local infoIcon = info:CreateTexture(nil, "ARTWORK")
+	infoIcon:SetTexture("Interface\\FriendsFrame\\InformationIcon")
+	infoIcon:SetAllPoints()
+	AttachTooltip(info, GREED or "Greed",
+		"Greed luck, streaks and losses are only calculated against rolls where nobody selected Need.")
+	info:Hide()
+	w.greedInfo = info
 	local colW = (INNER_W - 24) / 2
 	local leftX, rightX = PAD, PAD + colW + 24
 	local y0, step = -336, 18
@@ -372,6 +382,7 @@ end
 
 function UI:UpdateStats(s)
 	local w = self.widgets
+	w.greedInfo:SetShown(self.filter == "greed")
 	w.rolls.value:SetText(s.selections)
 	w.average.value:SetText(s.avg and string.format("%.1f", s.avg) or "-")
 	w.won.value:SetText(s.wins)
@@ -494,10 +505,13 @@ local function ShowRowTooltip(row)
 	if owner then
 		GameTooltip:AddDoubleLine("Character", owner, 1, 1, 1, 1, 1, 1)
 	end
-	if not rec.roll and rec.won == false and rec.wt == "need" and Stats.IsSelection(rec.type) and rec.type ~= "need" then
-		GameTooltip:AddLine("No number here: someone picked Need, so Greed never got to roll.", GREY[1], GREY[2], GREY[3], true)
+	local blocked = Stats.BlockedByNeed(rec)
+	if blocked and not rec.roll then
+		GameTooltip:AddLine("No number here: someone picked Need, so Greed never got to roll. Not counted as a loss.", GREY[1], GREY[2], GREY[3], true)
+	elseif blocked then
+		GameTooltip:AddLine("Not counted as a loss: someone picked Need, so this roll couldn't win.", GREY[1], GREY[2], GREY[3], true)
 	end
-	if rec.inf then
+	if rec.inf and not blocked then
 		GameTooltip:AddLine("Counted as a loss - the game never said you won this one.", GREY[1], GREY[2], GREY[3], true)
 	end
 	GameTooltip:Show()
@@ -599,12 +613,16 @@ local function FillRow(row, rec)
 	row.typeText:SetText(info and info.label or "-")
 	row.roll:SetText(OrDash(rec.roll))
 
+	local blocked = Stats.BlockedByNeed(rec)
 	if rec.won == true then
 		row.result:SetText("Won")
 		row.result:SetTextColor(GREEN[1], GREEN[2], GREEN[3])
 	elseif rec.type == "pass" then
 		row.result:SetText("Passed")
 		row.result:SetTextColor(GREY[1], GREY[2], GREY[3])
+	elseif blocked then
+		row.result:SetText("N/A")
+		row.result:SetTextColor(1, 1, 1)
 	elseif rec.won == false then
 		row.result:SetText("Lost")
 		row.result:SetTextColor(RED[1], RED[2], RED[3])
@@ -613,8 +631,15 @@ local function FillRow(row, rec)
 		row.result:SetTextColor(GREY[1], GREY[2], GREY[3])
 	end
 
+	-- A Need winner's roll goes inline with the name, so the name column borrows the roll column's space.
+	local inline = blocked and rec.wn and not rec.allp
+	row.winner:SetPoint("RIGHT", inline and row.where or row.winnerRoll, "LEFT", inline and -10 or -4, 0)
 	if rec.allp then
 		row.winner:SetText(Hex(GREY) .. "All passed|r")
+		row.winnerRoll:SetText("")
+	elseif inline then
+		local label = TYPE_INFO.need.label
+		row.winner:SetText(ClassColored(rec.wn, rec.wc) .. " (" .. label .. (rec.wr and (" - " .. rec.wr) or "") .. ")")
 		row.winnerRoll:SetText("")
 	elseif rec.wn then
 		row.winner:SetText(ClassColored(rec.wn, rec.wc))
