@@ -631,16 +631,17 @@ local function FillRow(row, rec)
 		row.result:SetTextColor(GREY[1], GREY[2], GREY[3])
 	end
 
-	-- A Need winner's roll goes inline with the name, so the name column borrows the roll column's space.
+	-- A Need winner's "(Need - N)" is wider than the roll column, so the roll column grows to fit it
+	-- (width 0 = size to text) and stays right-aligned with the plain "(N)" rolls.
 	local inline = blocked and rec.wn and not rec.allp
-	row.winner:SetPoint("RIGHT", inline and row.where or row.winnerRoll, "LEFT", inline and -10 or -4, 0)
+	row.winnerRoll:SetWidth(inline and 0 or COL.winnerRollW)
 	if rec.allp then
 		row.winner:SetText(Hex(GREY) .. "All passed|r")
 		row.winnerRoll:SetText("")
 	elseif inline then
 		local label = TYPE_INFO.need.label
-		row.winner:SetText(ClassColored(rec.wn, rec.wc) .. " (" .. label .. (rec.wr and (" - " .. rec.wr) or "") .. ")")
-		row.winnerRoll:SetText("")
+		row.winner:SetText(ClassColored(rec.wn, rec.wc))
+		row.winnerRoll:SetText("(" .. label .. (rec.wr and (" - " .. rec.wr) or "") .. ")")
 	elseif rec.wn then
 		row.winner:SetText(ClassColored(rec.wn, rec.wc))
 		row.winnerRoll:SetText(rec.wr and ("(" .. rec.wr .. ")") or "")
